@@ -60,7 +60,7 @@ class ChooseLevelFragment : Fragment() {
 
         const val NAME = "ChooseLevelFragment"
         fun newInstance(): ChooseLevelFragment {
-            return newInstance()
+            return ChooseLevelFragment()
         }
     }
 }
