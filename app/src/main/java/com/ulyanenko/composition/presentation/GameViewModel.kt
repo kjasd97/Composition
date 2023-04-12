@@ -16,7 +16,10 @@ import com.ulyanenko.composition.domain.repository.GameRepository
 import com.ulyanenko.composition.domain.usecases.GenerateQuestionUseCase
 import com.ulyanenko.composition.domain.usecases.GetGameSettingsUseCase
 
-class GameViewModel(application: Application) : AndroidViewModel(application) {
+class GameViewModel(
+    private val application: Application,
+    private val level: Level
+) : ViewModel() {
 
     private val context = application
 
@@ -25,7 +28,6 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private val getGameSettingsUseCase = GetGameSettingsUseCase(repository)
 
     private lateinit var gameSettings: GameSettings
-    private lateinit var level: Level
     private var timer: CountDownTimer? = null
 
     private val _formattedTime = MutableLiveData<String>()
@@ -64,17 +66,20 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private var countOfQuestions = 0
 
 
-    fun startGame(level: Level) {
-        getGameSettings(level)
+    init {
+        startGame()
+    }
+
+    fun startGame() {
+        getGameSettings()
         startTimer()
         generateQuestion()
         updateProgress()
     }
 
 
-    private fun getGameSettings(level: Level) {
-        this.level = level
-        this.gameSettings = getGameSettingsUseCase.invoke(level)
+    private fun getGameSettings() {
+        this.gameSettings = getGameSettingsUseCase(level)
         _minPercent.value = gameSettings.minPercentOfRightAnswers
     }
 
